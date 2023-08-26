@@ -1,0 +1,229 @@
+Student Information System Design
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question1. Create a new collection students
+
+Answer: 
+
+> use stud
+> db.createCollection("students")
+
+--------------------------------------------------------------------------------------------------------------------------- 
+
+Question2. Insert the following students into your students collection
+
+Answer: 
+
+> db.students.insert({_id:"arun",name:"arunkumar",year:1992,courses:["java","php"]})
+> db.students.insert({_id:"sam",name:"sam peter",year:1995,courses:["php","python","java"]})
+> db.students.insert({_id:"anna",name:"anna eva",year:1997,courses:["java"]})
+> db.students.insert({_id:"rex",name:"rex samuel",year:1988,courses:["python"]})
+> db.students.insert({_id:"olivia",name:"olivia cathy",year:2006})
+ 
+--------------------------------------------------------------------------------------------------------------------------- 
+
+Question3. Execute and explain the meaning of the following queries
+
+Answer: 
+
+> db.students.find() 
+
+> db.students.find({})
+ 
+> db.students.find({_id:"arun"})
+ 
+> db.students.find({name:"arunkumar",year:1992})
+ 
+> db.students.find({year:{$gte:1990,$lte:2000}})
+ 
+> db.students.find({courses:{$exists:true}})
+ 
+> db.students.find({courses:"php"})
+ 
+> db.students.find({courses:{$in:["php","oracle"]}})
+ 
+> db.students.find({courses:{$all:["php","oracle"]}})
+
+---------------------------------------------------------------------------------------------------------------------------  
+
+Question4. Execute and explain the meaning of the following queries
+
+Answer: 
+
+> db.students.find({$or:[{year:1992},{rating:{$gte:3}}]})
+ 
+> db.students.find({rating:{$not:{$gte:3}}})
+ 
+> db.students.find({},{name:1,year:1})
+ 
+> db.students.find({},{courses:0,_id:0})
+ 
+> db.students.find({},{name:1,courses:{$slice:2},_id:0})
+ 
+> db.students.find().sort({year:1,name:-1})
+ 
+> db.students.find().sort({name:1}).skip(1).limit(2)
+ 
+> db.students.find().sort({name:1}).limit(2).skip(1)
+ 
+--------------------------------------------------------------------------------------------------------------------------- 
+
+Question5. Execute the following queries in your students collection
+
+Answer: 
+
+> db.students.save({_id:"arun",name:{first:"Arun",last:"Kumar"},year:1992,courses:["java","php","mongodb"]});
+
+> db.students.save({_id:"sam",name:{first:"Sam",last:"Peter"},year:1995,courses:["php","python","java"]});
+
+> db.students.save({_id:"anna",name:{first:"Anna",last:"Eva"},year:1997,courses:["java"]});
+
+> db.students.save({_id:"rex",name:{first:"Rex",last:"Samuel"},year:1988,courses:["python"]});
+
+> db.students.save({_id:"olivia",name:{first:"Olivia",last:"Freda"},year:2006});
+
+> db.students.save({_id:"sylvia",name:{first:"Sylvia",last:"Diana"},year:2008,courses:["php"]});
+
+> db.students.save({_id:"Benita",name:{first:"Benita",last:"Sam"},year:1988,courses:"php"});
+ 
+--------------------------------------------------------------------------------------------------------------------------- 
+
+Question6. Execute the following queries in your courses collection
+
+Answer: 
+
+> db.courses.save({_id:"java",
+title:{tamil:"Java Programming",en:"Java Programming"},
+year:2000,
+rating:84,
+students:["arun","sam","anna"],
+departments:["cs","ca"],
+campus:["Trichy","Dubai"]});
+
+> db.courses.save({_id:"php",
+title:"PHP Programming",
+year:2007,
+professor:{first:"John",last:"Peter"},
+rating:53,
+students:["arun","sam","sylvia","divya","hazel"],
+departments:["cs","ca"],
+campus:["Trichy","Singapore"]});
+
+> db.courses.save({_id:"python",
+title:{tamil:"Python Programming",en:"Python Programming"},
+year:2006,
+professor:{first:"John",last:"Santhosh"},
+rating:76,
+students:["rex","sam","anna"],
+departments:"cs",
+campus:"Trichy"});
+
+> db.courses.save({_id:"os",
+title:"Operating Systems",
+year:2003,
+professor:{last:"Titus",first:"Antony"},
+rating:81,
+students:[],
+departments:["ds","ca"],
+campus:["Trichy","Sharjah","Singapore"]});
+
+> db.courses.save({_id:"networks",
+title:"Networking Fundamentals",
+year:2005,
+professor:{last:"Solomon",first:"Balu"},
+rating:72,
+awards:[{type:"National Award",year:2005}]});
+
+> db.courses.save({_id:"graphics",
+title:"Computer Graphics",
+year:1996,
+rating:86,
+awards:[{type:"National Award",year:1996},{type:"International Award",category:"Core CS",year:2005}]});
+ 
+--------------------------------------------------------------------------------------------------------------------------- 
+
+Question7. Find students born in 1995 with first name Sam
+
+Answer: 
+
+> db.students.find({"name.first":"Sam",year:1995})
+ 
+---------------------------------------------------------------------------------------------------------------------------  
+
+
+Question8. Find courses delivered by John Peter
+Note that the order of fields for first and last names can be arbitrary 
+
+Answer: 
+
+> db.courses.find({"professor.first":"John","professor.last":"Peter"})
+ 
+---------------------------------------------------------------------------------------------------------------------------  
+
+Question9. Find students with first name Sam who take the course php
+Return names of these students only 
+
+Answer: 
+
+> db.students.find({"name.first":"Sam",courses:"php"},{name:1,_id:0})
+
+---------------------------------------------------------------------------------------------------------------------------  
+
+Question10. Find courses delivered between years 2000 and 2005 such that they have a professor specified 
+Return course identifier only
+Order the result by ratings in descending order and then by years in ascending order 
+
+Answer: 
+
+> db.courses.find({year:{$gte:2000,$lte:2005}},{_id:1}).sort({rating:-1,year:1})
+ 
+---------------------------------------------------------------------------------------------------------------------------  
+
+Question11. Find students who studied courses, java or php
+Return student identifier only 
+Propose two different approaches 
+
+Answer: 
+
+> db.students.find({courses:{$in:["php","java"]}},{_id:1})
+ 
+---------------------------------------------------------------------------------------------------------------------------  
+
+Question12. Find students who studied courses both java and php 
+Return student identifier only 
+Propose two different approaches 
+
+Answer: 
+
+> db.students.find({courses:{$all:["php","java"]}},{_id:1})
+ 
+---------------------------------------------------------------------------------------------------------------------------  
+
+Question13. Find courses with Tamil title equal to Python Programming 
+Return course title only 
+Note that there are two ways how course titles are defined 
+
+Answer: 
+
+> db.courses.find({"title.tamil":"Java Programming"},{title:1,_id:0})
+ 
+---------------------------------------------------------------------------------------------------------------------------  
+
+Question14. Find courses that have a National award from 2005 
+Return course identifier and all awards
+
+Answer: 
+
+> db.courses.find({"awards.type":"National Award",year:{$gte:2005}},{"awards.type":1})
+ 
+---------------------------------------------------------------------------------------------------------------------------  
+
+Question15. Find courses that are offered in CS and CA departments at the same time or have a rating 80 or more
+Return course identifier and at most 2 campuses
+
+Answer: 
+
+> db.courses.find({$or:[{depts:{$all:["cs","ca"]}},{rating:{$gte:80}}]},{_id:1,campus:{$slice:2}})
+ 
+---------------------------------------------------------------------------------------------------------------------------  

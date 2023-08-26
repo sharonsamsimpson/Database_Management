@@ -1,0 +1,91 @@
+Ecommerce Product Catalog Design
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question1. Create a collection Product and insert the following document for Audio Album
+
+Answer: 
+
+> db.Product.insert({_id:"p01",
+type:"Audio Album",
+title:"Bergmans volume15",
+description:"by Fr Bergmans",
+release_date:"2020-02-15",
+shipping:{weight:6,dimensions:{width:10,height:10,depth:1}},
+pricing:{list:1200,retail:1100,savings:100,percentage_savings:8},
+details:{title:"Jeba Thotta Jeya Geethangal",
+artist:"Fr Bergmans",
+genre:["folk","Spiritual"],
+tracks:["Song1","Song2","Song3","Song4"]}})
+
+--------------------------------------------------------------------------------------------------------------------------- 
+
+Question2. Insert the following document for a Movie to Product collection
+
+Answer: 
+
+> db.Product.insert({_id:"p02",
+type:"Movie",
+title:"Master",
+description:"Movie by Actor Vijay",
+release_date:"2020-03_14",
+shipping:{weight:10,dimensions:{width:20,height:10,depth:2}},
+pricing:{list:15000,retail:14000,savings:500,percentage_savings:12},
+details:{title:"Master",
+director:["Rex","Peter"],
+writer:["Sam","Jones"],
+length:"3 Hours"}})
+ 
+--------------------------------------------------------------------------------------------------------------------------- 
+
+Question3. Show all documents in the collection Product
+
+Answer: 
+
+> db.Product.find().pretty() 
+ 
+--------------------------------------------------------------------------------------------------------------------------- 
+
+Question4. Find all products with a discount greater than 10%, sorted by descending percentage discount
+
+Answer: 
+
+> db.Product.find({"pricing.percentage_savings":{$gt:10}}).sort({"pricing.percentage_savings":-1}).pretty()
+ 
+--------------------------------------------------------------------------------------------------------------------------- 
+
+Question5. Find documents for the audio albums of folk genre, sorted in reverse chronological order 
+
+Answer: 
+
+> db.product.find({"details.genre":"folk"}).sort({_id:-1})
+ 
+--------------------------------------------------------------------------------------------------------------------------- 
+
+Question6. Find films that is acted by actor ‘Vijay’, sorted by release date 
+
+Answer: 
+
+> db.Product.find({"description":"Movie by Actor Vijay"},{title:1,_id:0}).sort({release_date:1})
+
+---------------------------------------------------------------------------------------------------------------------------  
+
+Question7. Find movies with a particular word in the title 
+
+Answer: 
+
+> db.Product.find({title:/^M/},{_id:0,title:1})
+
+---------------------------------------------------------------------------------------------------------------------------  
+
+Question8. Write atleast 3 queries for Product collection that are useful for Ecommerce website
+
+Answer: 
+
+> db.Product.find({},{pricing:1,type:1,_id:0})
+
+> db.Product.find({"shipping.weight":{$not:{$gte:9}}},{pricing:1,type:1,_id:0})
+
+> db.Product.find({"pricing.savings":{$gte:300}},{pricing:1,type:1,details:1,_id:0})
+ 
+--------------------------------------------------------------------------------------------------------------------------- 

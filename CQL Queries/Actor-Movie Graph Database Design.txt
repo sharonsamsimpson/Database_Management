@@ -1,0 +1,127 @@
+Actor-Movie Graph Database Design
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question1. Retrive all nodes from the database.
+
+Answer: 
+
+MATCH (n)
+RETURN n
+
+--------------------------------------------------------------------------------------------------------------------------- 
+
+Question2. Examine the schema of your database.
+
+Answer: 
+
+CALL db.schema.visualization()
+
+--------------------------------------------------------------------------------------------------------------------------- 
+
+Question3. Retrive all Person nodes.
+
+Answer: 
+
+MATCH (p:Person)
+RETURN p
+
+--------------------------------------------------------------------------------------------------------------------------- 
+
+Question4. Retrive all Movie nodes.
+
+Answer: 
+
+MATCH (m:Movie)
+RETURN m
+
+--------------------------------------------------------------------------------------------------------------------------- 
+
+Question5. Retrieve all Movie nodes that have a released property value of 2003.
+
+Answer: 
+
+MATCH (m:Movie {released: 2003})
+RETURN m
+
+--------------------------------------------------------------------------------------------------------------------------- 
+
+Question6. View the retrieved results as a table.
+
+Answer: 
+
+MATCH (m:Movie {released: 2003})
+RETURN m
+
+--------------------------------------------------------------------------------------------------------------------------- 
+
+Question7. Query the database for all property keys.
+
+Answer: 
+
+CALL db.propertyKeys
+
+--------------------------------------------------------------------------------------------------------------------------- 
+
+Question8. Retrieve all Movies released in a specific year, returning their titles.
+
+Answer: 
+
+MATCH (m:Movie {released: 2006})
+RETURN m.title
+
+--------------------------------------------------------------------------------------------------------------------------- 
+
+Question9. Display title, released, and tagline values for every Movie node in the graph.
+
+Answer: 
+
+MATCH (m:Movie)
+RETURN m.title, m.released, m.tagline
+
+--------------------------------------------------------------------------------------------------------------------------- 
+
+Question10. Display more user-friendly headers in the table.
+
+Answer: 
+
+MATCH (m:Movie)
+RETURN m.title AS `Movie title`, m.released AS `Released date`, m.tagline AS `Tag line`
+
+--------------------------------------------------------------------------------------------------------------------------- 
+
+Question11. Retrieve all people who wrote the movie Speed Racer.
+
+Answer: 
+
+MATCH (p:Person)-[:WROTE]->(:Movie {title: "Speed Racer"})
+RETURN p
+
+--------------------------------------------------------------------------------------------------------------------------- 
+
+Question12. Retrieve all movies that are connected to the person, Tom Hanks.
+
+Answer: 
+
+MATCH (m:Movie)--(:Person {name: 'Tom Hanks'})
+RETURN m
+
+--------------------------------------------------------------------------------------------------------------------------- 
+
+Question13. Retrieve information about the relationships Tom Hanks had with the set of movies retrieved earlier.
+
+Answer: 
+
+MATCH (m:Movie)-[relation]-(:Person {name: 'Tom Hanks'})
+RETURN m.title, type(relation)
+
+--------------------------------------------------------------------------------------------------------------------------- 
+
+Question14. Retrieve information about the roles that Tom Hanks acted in.
+
+Answer: 
+
+MATCH (m:Movie)-[acted:ACTED_IN]-(:Person {name: 'Tom Hanks'})
+RETURN m.title, acted.roles
+
+---------------------------------------------------------------------------------------------------------------------------   

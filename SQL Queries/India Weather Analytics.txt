@@ -1,0 +1,319 @@
+India Weather Analytics
+
+---------------------------------------------------------------------------------------------------------------------------
+
+PART-1  
+
+1. Explain the attributes of the dataset, what are they?
+
+Answer:
+
+There are totally 5 attributes or columns in this table named weather. 
+
+The attributes names and their data types is given below : SQL> desc weather;
+
+The C_TEMP column is a a unique number for a row, 
+MONTH column is about months of a year, 
+DAY column represents the days of a month, 
+YEAR column is basically year, 
+TEMP column shows the temperature of that particular city and 
+CITY column tells which city.
+
+---------------------------------------------------------------------------------------------------------------------------
+ 
+2. Check whether the dataset has primary key?. 
+If not, you do need primary key?.  
+
+Answer:
+
+Initially checking the dataset, it is found that the dataset does not have a primary key. 
+So the C_TEMP column is set as a primary key by defining unique values to it.
+
+---------------------------------------------------------------------------------------------------------------------------
+
+3. Explain what insights you hope to gain  
+
+Answer:
+
+It is evident from the dataset that the table is about the weather statistics of four main metropolitan cities in India.
+It tells us about the temperature of different cities dating from 1995 to 2020.
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question1: Import Excel data into your table (You can use any tools – Oracle, SQLite, etc) 
+
+Answer:
+
+The data is imported into the database.
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question2: Write 5 Queries using SELECT and WHERE clause 
+
+Answer:
+ 
+SQL> select * from weather where c_temp = '33959';
+
+SQL> select city from weather where c_temp = '1029';
+
+SQL> select day from weather where c_temp = '362' and city = 'chennai';
+
+SQL> select day,month,year from weather where c_temp = '33956';
+
+SQL> select * from weather where c_temp = '3817' or c_temp = '324';
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question3: Write 5 queries using Aggregate functions (min, max, avg and count)  
+
+Answer:
+
+SQL> select min(temp) from weather 
+where city = 'chennai' and month = 12 and year = 2017 
+group by temp;
+
+SQL> select day,month,year,temp,city,count(city) from weather 
+where year=2001 and month=5 and temp=88 
+group by day,month,year,temp,city;
+
+SQL> select max(temp) from weather 
+where city='delhi';
+
+SQL> select min(temp),max(temp),avg(temp) from weather 
+where year = 2007 and city = 'kolkata';
+
+SQL> select city,min(temp),max(temp) from weather 
+where day=12 and month=12 and year=2012 
+group by city,temp;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Sample Queries (Write SQL Queries to answer the following)  
+
+1. What is the lowest, highest and average temperature of your dataset (from year 1995 to  February 2020)?  
+
+Answer:
+
+SQL> select min(temp) lowest_temp, max(temp) highest_temp, avg(temp) average_temp from weather 
+where year between 1995 and 2020;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+2. What is the average temperature in May 2019 in Chennai?
+
+Answer:
+
+SQL> select avg(temp) average_temperature from weather 
+where city='chennai' and month=5 and year=2019;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+3. Which is the hottest day in 2019 in Delhi?
+
+Answer:
+
+SQL> select day hottest_day,month of_the,year from weather 
+where year='2019' and city='delhi' and 
+temp=(select max(temp) from weather where year='2019' and city='delhi');
+
+---------------------------------------------------------------------------------------------------------------------------
+
+4. Which is the coldest day in 2018 in Chennai?
+
+Answer: 
+
+SQL> select day coldest_day, month of_the, year from weather 
+where year='2018' and city='chennai' and 
+temp=(select min(temp) from weather where year='2018' and city='chennai');
+
+---------------------------------------------------------------------------------------------------------------------------
+
+5. Which is the coldest year in December?. Print city and temperature.
+
+Answer: 
+
+SQL> select year,city,temp from weather 
+where month ='12' and 
+temp=(select min(temp) from weather);
+
+---------------------------------------------------------------------------------------------------------------------------
+
+6. Which is the hottest city in India in 2017?
+
+Answer: 
+
+SQL> select city hottest_city from weather 
+where year='2017' and 
+temp=(select max(temp) from weather where year='2017');
+
+---------------------------------------------------------------------------------------------------------------------------
+
+7. Is winter in Delhi in January 2017 colder than Mumbai?. Print average temperature of Delhi and Mumbai too.
+
+Answer: 
+
+SQL> select avg(temp) average_temp_of_delhi from weather 
+where city='delhi' and year=2017 and month=1;
+
+SQL> select avg(temp) average_temp_of_mumbai from weather 
+where city='mumbai' and year=2017 and month=1;
+
+From the outputs of the select queries given, 
+it is found that Delhi city is colder than Mumbai city in the winter at January of 2017.
+
+---------------------------------------------------------------------------------------------------------------------------
+
+8. Display the day, month, year and city of the coldest day.
+
+Answer: 
+
+SQL> select day,month,year,city from weather 
+where temp=(select min(temp) from weather);
+
+---------------------------------------------------------------------------------------------------------------------------
+
+PART-2  
+
+Question1: Write 3 Queries using WHERE and GROUPBY clause
+
+Answer: 
+
+SQL> select year,min(temp) from weather 
+where city ='chennai' 
+group by year;
+
+SQL> select city,count(city) from weather 
+where day=11 and month=5 and year=2001 
+group by city;
+
+SQL> select year,month,city,avg(temp) from weather 
+where year=2020 and month=2 
+group by city,year,month;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question2: Write 3 Queries using WHERE, GROUPBY and HAVING clause
+
+Answer: 
+
+SQL> select city,avg(temp) from weather 
+where year=2020 and month=2 
+group by city 
+having avg(temp)<70;
+
+SQL> select temp,year,month,count(city) from weather 
+where year=1995 and month between 5 and 7 
+group by temp,year,month 
+having count(city)=4;
+
+SQL> select city,year,month,max(temp) from weather 
+where month=12 
+group by city,year,month 
+having max(temp) between 82 and 83;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question3: Write 3 Queries using WHERE, GROUPBY, HAVING and ORDERBY clause
+
+Answer: 
+
+SQL> select city,year,month,max(temp) from weather 
+where month=12 
+group by city,year,month
+having max(temp)>83 
+order by year;
+
+SQL> select temp,year,month,count(city) from weather 
+where year=2000 and month=7 
+group by temp,year,month 
+having count(city)=2 
+order by temp;
+
+SQL> select year,city,avg(temp) from weather 
+where month=5 
+group by city,year 
+having avg(temp)<80 
+order by avg(temp);
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Sample Queries
+
+1. What is the average weather in May of all cities?. Display city and average temperature in descending order.
+
+Answer: 
+
+SQL> select city,avg(temp) average_temperature from weather 
+where month = 5 
+group by city 
+order by avg(temp) desc;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+2. Show the average historic temperature (from year 1995 to Feb 2020, entire table)
+in each city in ascending order of city name.
+
+Answer: 
+
+SQL> select city,avg(temp) average_historic_temperature from weather 
+where year between 1995 and 2020 
+group by city 
+order by city asc;
+
+--------------------------------------------------------------------------------------------------------------------------- 
+
+3. Show lowest, highest and average temperature in Kolkata during 2010 to 2020.
+
+Answer: 
+
+SQL> select min(temp) lowest_temp,max(temp) highest_temp,avg(temp) average_temp from weather 
+where city='kolkata' and year between 2010 and 2020;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+4. Find cities and average temperature which recorded atleast 40 degree Celsius in April 2019.
+
+Answer: 
+
+SQL>  select city,avg(temp) from weather 
+where temp>=40 and year=2019 and month=4 
+group by city;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+5. Show monthwise average temperature in Chennai in 2019. 
+Print month name and average temperature values
+
+Answer: 
+
+SQL> select month,avg(temp) from weather 
+where city='chennai' and year=2019 
+group by month 
+order by month;
+
+---------------------------------------------------------------------------------------------------------------------------
+ 
+6. Show year wise average temperature of Mumbai. 
+Print year and corresponding average temperature values, in descending orders
+
+Answer: 
+
+SQL> select year,avg(temp) from weather 
+where city='mumbai' 
+group by year 
+order by avg(temp) desc;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+7. Show city wise yearly average temperature values for the years 2017, 2018 and 2019. 
+City names as rows and years as columns. 
+Each cell will denote its average temperature value.
+
+Answer: 
+
+SQL> select year,city,avg(temp) from weather 
+where year in(2017,2018,2019) 
+group by city,year 
+order by city;
+
+--------------------------------------------------------------------------------------------------------------------------- 

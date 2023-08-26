@@ -1,0 +1,193 @@
+Retail Sales Analytics
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question1: Describe the data, making note of the interesting attributes and relationships in the data. 
+Include 3-5 rows of sample data from each file. 
+Explain what insights you hope to gain from analyzing the data. 
+
+Answer:
+
+Data Description: There were given 3 tables namely, stores, features and sales. 
+The given data is about the historical sales data for 45 stores 
+They are located in different regions with each store contains a number of departments. 
+The company also runs several promotional markdown events throughout the year. 
+These markdowns precede prominent holidays,
+the four largest of which are the Super Bowl, Labor Day, Thanksgiving, and Christmas. 
+The weeks including these holidays are weighted five times higher in the evaluation than non-holiday weeks.
+
+Relationships in the Data:
+In the table Stores, Store_id is set to be the primary key.
+Features table contains additional data related to the store, department, and regional activity for the given dates.
+Sales table consists of Historical sales data, which covers from 2010-02-05 to 2012-11-01.
+
+Attributes of Stores Table:
+• Store_id - Information about the 45 stores
+• Type - Indicating the type
+• Store_Size - Size of store 
+
+Attributes of Features Table:
+• Store - the store number 
+• Date - the week 
+• Temperature - average temperature in the region 
+• Fuel_Price - cost of fuel in the region 
+• MarkDown1-5 - anonymized data related to promotional markdowns. 
+MarkDown data is only available after Nov 2011, and is not available for all stores all the time. 
+Any missing value is marked with an NA 
+• CPI - the consumer price index 
+• Unemployment - the unemployment rate 
+• IsHoliday - whether the week is a special holiday week 
+
+Attributes of Sales Table:
+• Store - the store number 
+• Dept - the department number 
+• Date - the week 
+• Weekly_Sales - sales for the given department in the given store 
+• IsHoliday - whether the week is a special holiday week
+
+Insights from analyzing the data:
+Hoping to gain some insights such as by modelling retail data is the need to make decisions based on limited history.
+Holidays and select major events come once a year.
+And so does the chance to see how strategic decisions impacted the bottom line. 
+In addition, markdowns are known to affect sales.
+The challenge is to predict which departments will be affected and to what extent.  
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question2: Create tables from Excel files. 
+Relate the tables via primary key and foreign key wherever required. 
+
+Answer:
+
+Tables created and imported into the environment.
+Initially in the Stores table, Store_id is set to be the primary key of that table.
+In the Features and Sales tables, Store_id is given as a foreign key.
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question3: Write atleast 2 queries to explore each table by using WHERE and ORDERBY
+
+Answer:
+
+SQL> select store_id,store_size from stores where type ='A' order by store_id;
+ 
+SQL> select store_id,type,store_size from stores where store_size >= 202000 order by type;
+ 
+SQL> select store,F_Date,temperature,cpi from features where cpi between '187' and '187.5' order by store;
+ 
+SQL> select * from features where cpi between '127.5' and '127.7' and temperature>='30' order by store;
+ 
+SQL> select * from sales where dept=1 and sales_date ='14-09-2012' and store between 11 and 20 order by store;
+ 
+SQL> select * from sales where dept between 4 and 10 and sales_date ='14-09-2012' and store = 45 order by dept;
+ 
+---------------------------------------------------------------------------------------------------------------------------
+
+Question4: Write 3 queries with at least 1 join per query. 
+
+Answer:
+
+SQL> select a.*,b.store,b.dept,b.weekly_sales from stores a,sales b 
+where b.dept=23 and b.isholiday='TRUE' and a.store_id between 6 and 7 and a.store_id = b.store;
+ 
+SQL> select a.store,a.dept,a.sales_date,b.temperature,b.cpi,b.fuel_price from sales a,features b 
+where a.store=7 and a.dept between 3 and 7 
+and a.sales_date ='26-08-2011' 
+and b.temperature between 40 and 50 and b.cpi>='192' 
+and b.cpi<='193' 
+and a.store = b.store 
+order by a.dept;
+ 
+SQL> select a.*,b.markdown1,b.markdown2,b.markdown3,b.markdown4,b.markdown5,b.isholiday from stores a,features b 
+where b.store=45 and b.f_date between '25-06-2012' and '27-06-2012' 
+and a.store_id = b.store;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question5: Write at least 3 queries that must use outer joins.
+
+Answer:
+
+SQL> select a.*,b.store,b.temperature,b.cpi,b.isholiday from stores a,features b 
+where b.temperature between 38 and 38.5 
+and b.isholiday='TRUE'
+and a.store_id(+) = b.store 
+order by b.temperature;
+ 
+SQL> select a.store_id,avg(b.weekly_sales) from stores a,sales b 
+where b.isholiday='TRUE'
+and a.store_id = 7 
+and b.dept = 7 
+and a.store_id = b.store(+) 
+group by a.store_id,b.weekly_sales 
+order by a.store_id;
+ 
+SQL> select a.store_id,a.type,b.dept,b.weekly_sales,b.sales_date from stores a,sales b 
+where a.store_id=1 and b.dept=1 
+and b.sales_date between '23-10-2012' and '26-10-2012'
+and a.store_id(+) = b.store;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question6: Develop aggregate queries in SQL on Retail dataset as follows
+• Write 6 SQL queries with aggregation.
+• At least 1 aggregate function per query.
+• At least 2/5 aggregate functions among the 6 queries.
+• At least 4 GROUP BY clauses among the 6 queries.
+• At least 3 HAVING clauses among the 6 queries.
+
+Answer:
+
+SQL> select min(temperature),max(temperature),round(avg(temperature),2) from features 
+where isholiday='TRUE';
+ 
+SQL> select store,min(dept),max(dept) from sales 
+where store<=15 
+group by store 
+order by store;
+ 
+SQL> select store_id,min(store_size),max(store_size) from stores 
+where store_id<15 
+group by store_id;
+ 
+SQL> select store,round(avg(weekly_sales),2),date_s from sales 
+where isholiday='TRUE' and dept=1 
+group by store,weekly_sales,date_s 
+having avg(weekly_sales)<5000;
+ 
+SQL> select store,round(avg(weekly_sales) ,2) avg_weekly_sales from sales 
+group by store having store<=15 
+order by store;
+ 
+SQL> select store,min(temperature),max(temperature),avg(temperature),cpi from features 
+where store=7 
+group by store,temperature,cpi 
+having cpi<190 
+order by cpi;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question7: Develop 4 nested queries that satisfy these requirements: 
+• At least one subquery per query 
+• At least 2 of the queries must use an aggregate function
+• At least 2 of the queries must use a join (either inner or outer) 
+
+Answer:
+
+SQL> select a.type,b.store,b.weekly_sales from stores a,sales b 
+where weekly_sales=(select max(weekly_sales) from sales) 
+order by a.type;
+ 
+SQL> select a.type,b.store,b.weekly_sales from stores a,sales b 
+where weekly_sales=(select min(weekly_sales) from sales) 
+order by a.type;
+ 
+SQL> select a.store_id,type,b.store,weekly_sales 
+from stores a full outer join sales b on a.store_id=b.store 
+where weekly_sales=(select min(weekly_sales) from sales);
+ 
+SQL> select a.store_id,type,b.store,weekly_sales 
+from stores a full outer join sales b on a.store_id=b.store 
+where weekly_sales=(select max(weekly_sales) from sales);
+ 
+---------------------------------------------------------------------------------------------------------------------------

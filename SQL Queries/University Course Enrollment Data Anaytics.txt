@@ -1,0 +1,128 @@
+University Course Enrollment Data Anaytics
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question1. Print the names of professors who work in departments that have fewer than 50 PhD students.
+
+Answer: 
+
+SQL> select a.pname,b.dname,num_phd from prof a,dept b 
+where num_phd<50 
+order by num_phd desc;
+
+---------------------------------------------------------------------------------------------------------------------------
+ 
+Question2. Print the names of the students with the lowest GPA. 
+
+Answer: 
+
+SQL> select sname,gpa from student 
+where gpa=(select min(gpa) from student);
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question3. For each Computer Sciences class, 
+print the class number, section number, and the average gpa of the students enrolled in the class section.
+
+Answer: 
+
+SQL> select e.cno,e.sec_no,avg(s.gpa) from enroll e,student s 
+where dname='Computer Sciences' and s.sid=e.sid 
+group by dname,cno,sec_no;
+
+---------------------------------------------------------------------------------------------------------------------------
+ 
+Question4. Print the names and section numbers of all sections with more than six students enrolled in them.
+
+Answer: 
+
+SQL> select c.cno,c.cname,e.sec_no,count(e.sid) 
+from course c left join enroll e on c.cno=e.cno 
+group by c.cno,c.cname,e.sec_no 
+having count(e.sid)>6;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question5. Print the name(s) and sid(s) of the student(s) enrolled in the most sections. 
+
+Answer: 
+
+SQL> select sname,sid from student 
+where sid in (select sid from enroll 
+group by sid 
+having count(*)>=all(select count(*) from enroll group by sid));
+
+---------------------------------------------------------------------------------------------------------------------------
+ 
+Question6. Print the names of departments that have one or more majors who are under 18 years old.
+
+Answer: 
+
+SQL> select m.dname from student s,major m 
+where s.sid=m.sid and s.age<18;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question7. Print the names and majors of students who are taking one of the College Geometry courses.
+
+Answer: 
+
+SQL> select s.sname,c.dname from student s,course c 
+where c.cname in ('College Geometry 1') or c.cname in ('College Geometry 2');
+ 
+--------------------------------------------------------------------------------------------------------------------------- 
+Question8. For those departments that have no major taking a College Geometry course 
+print the department name and the number of PhD students in the department.
+
+Answer: 
+
+SQL> select d.dname,d.num_phd from dept d 
+where d.dname!='Mathematics';
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question9. Print the names of students who are taking both a Computer Sciences course and a Mathematics course. 
+
+Answer: 
+
+SQL> select s.sname,e.dname from student s,enroll e 
+where e.dname='Computer Sciences' and e.dname='Mathematics';
+
+---------------------------------------------------------------------------------------------------------------------------
+ 
+Question10. Print the age difference between the oldest and the youngest Computer Sciences major.
+
+Answer: 
+
+SQL> select max(s.age)-min(s.age) as age_diff 
+from student s inner join major m on m.sid=s.sid 
+where m.dname='Computer Sciences';
+ 
+---------------------------------------------------------------------------------------------------------------------------
+
+Question11. For each department that has one or more majors with a GPA under 1.0, 
+print the name of the department and the average GPA of its majors. 
+
+Answer: 
+
+SQL> select e.dname,avg(s.gpa) from student s,enroll e 
+where gpa<1.0 
+group by s.sid,e.dname; 
+
+SQL> select e.dname,avg(s.gpa) from student s,enroll e 
+where gpa<1.0 
+group by s.sid,e.dname;
+
+---------------------------------------------------------------------------------------------------------------------------
+ 
+Question12. Print the ids, names and GPAs of the students who are currently taking all the Civil Engineering courses.
+
+Answer: 
+
+SQL> select e.sid,s.sname,s.gpa,e.dname 
+from student s right outer join enroll e on s.sid=e.sid 
+where e.dname='Civil Engineering' 
+group by e.sid,s.sname,s.gpa,e.dname 
+order by gpa asc;
+ 
+---------------------------------------------------------------------------------------------------------------------------

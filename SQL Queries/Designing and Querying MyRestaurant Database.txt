@@ -1,0 +1,147 @@
+Designing and Querying MyRestaurant Database
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question1. Create a table called MyRestaurants with the following attributes:  
+- Name of the restaurant: a varchar field  
+- Type of food they make: a varchar field (food type: veg, nonveg, chinese)  
+- Distance (in minutes) from your house: an integer  
+- Date of your last visit: a varchar field, interpreted as date  
+- Whether you like it or not: an integer, interpreted as a Boolean  
+
+Answer: 
+
+SQL> create table Restaurants(
+Name varchar2(20),
+Food_Type varchar2(10),
+Distance number(2),
+Last_Visited varchar(15),
+Feedback number(2));
+ 
+SQL> desc Restaurants; 
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question2. Insert at least five tuples using the SQL INSERT command seven (or more) times. 
+You should insert at least one restaurant you liked, 
+at least one restaurant you did not like, and 
+at least one restaurant where you leave the iLike field NULL.  
+
+Sample Dataset:  
+name foodtype distance lastvisit ilike  
+apple_leaf nonveg 15 01-Jan-2020 1  
+sowmyas veg 18 20-Mar-2020 1  
+thinnappa nonveg 25 20-Nov-2019 0  
+sribhavan veg 18 20-Dec-2019 0  
+chinaworld chinese 14 05-Mar-2020 1  
+littlechina chinese 30 10-Mar-2020 0  
+munivilas nonveg 20 05-Dec-2019 null  
+dosacorner nonveg 10 05-Feb-2020 1  
+
+Answer: 
+
+SQL> insert Restaurants(Name,Food_Type,Distance,Last_Visited,Feedback)
+values ('&Name','&Food_Type',&Distan ce','&Last_Visited','&Feedback'); 
+
+SQL> /
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question3. Write a SQL query that returns all restaurants in your table. 
+
+Answer: 
+
+SQL> select * from Restaurants;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question4. Now, experiment with a few output formats, using the SQL query you wrote for Question3. 
+
+Print the results in comma-separated form 
+
+Answer: 
+
+SQL> select Name||','||Food_Type||','||Distance||','||Last_Visited||','||Feedback from Restaurants; 
+
+Print the results in list form, delimited by "|" 
+
+Answer: 
+
+SQL> select Name||'|'||Food_Type||'|'||Distance||'|'||Last_Visited||'|'||Feedback from Restaurants;
+
+Print the results in column form, and make each column have width 15 
+
+Answer: 
+
+SQL> alter table Restaurants modify(Name varchar2(15));  
+
+SQL> select * from Restaurants; 
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question5. Modify your SQL query such that it prints "I liked it" or "I hated it" for each restaurant you liked or not.
+Note that you are not allowed to modify the table on disk. 
+You should be able to answer this question using only a SELECT statement. 
+A solution that creates and uses an extra table, however, will be accepted.  
+
+Answer:
+
+SQL> select replace (Feedback,'1','I like it')from Restaurants; 
+
+SQL> select replace (Feedback,'0','I hate it')from Restaurants; 
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question6. Write a SQL query that returns only the name and distance of all restaurants
+within and including 20 minutes of your house. 
+The query should list the restaurants in alphabetical order of names.  
+
+Answer: 
+
+SQL> select Name,Distance from Restaurants 
+where Distance<=20 order by Name asc;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question7. Write a SQL query that returns the names of restaurants in descending order that makes Chinese foods. 
+
+Answer: 
+
+SQL> select Name from Restaurants 
+where Food_Type='chinese' 
+order by Name desc; 
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question8. Write a SQL query that returns the names of restaurants in ascending order 
+which you have visited in the past 2 months. 
+
+Answer: 
+
+SQL> select Name from Restaurants 
+where Last_Visited between '01_Jul-2021' and '01-Sep-2021'
+order by Name asc; 
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question9. Write a SQL query that returns all restaurants that you like, 
+but have not visited since more than 3 months ago.  
+
+Answer:
+
+SQL> select Name from Restaurants 
+where Feedback=1 and Last_Visited between '10_Jun-2021' and '29-Sep-2021'
+order by Name; 
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Question10. Write a SQL query that returns all restaurants names 
+that are within and including 15 mins from your house where you like Chinese foods. 
+
+Answer: 
+
+SQL> select Name from Restaurants 
+where Distance<=15 and Food_Type='chinese' 
+order by Name;
+
+---------------------------------------------------------------------------------------------------------------------------
